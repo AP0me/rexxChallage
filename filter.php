@@ -52,7 +52,7 @@
       display: grid;
       max-height: calc(100vh - 260px);
       overflow-y: auto;
-      grid-template-columns: 80px auto auto auto min-content;
+      grid-template-columns: 80px auto auto auto auto min-content;
       gap: 10px;
       background: #fff;
       padding: 20px;
@@ -98,7 +98,7 @@
         <input type="text" id="eventName" name="eventName" placeholder="Event">
       </div>
       <div class="date">
-        <label for="eventDate">Event Date:</label>
+        <label for="eventDate">Since:</label>
         <input type="date" id="eventDate" name="eventDate">
       </div>
       <div class="apply-filter">
@@ -132,6 +132,7 @@
         <div class="event-row event-emp-name">Employee</div>
         <div class="event-row event-name">Event</div>
         <div class="event-row event-fee">Fee</div>
+        <div class="event-row event-mail">Mail</div>
         <div class="event-row event-date">Date</div>` + data;
         if(displayResult.innerHTML.length!==titleAndData.length){
           displayResult.innerHTML=titleAndData;

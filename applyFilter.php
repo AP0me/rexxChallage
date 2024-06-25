@@ -8,10 +8,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $startDate = $_POST['start_date'] ?? '';
 
   $query = "
-    SELECT employee.name AS employee_name, event.name AS event_name, event.fee_cents AS fee, event.date
-    FROM employee
-    JOIN event ON employee.event_id = event.event_id
-    WHERE employee.name LIKE ? AND event.name LIKE ? AND event.date BETWEEN ? AND NOW();
+    SELECT event.name as event_name, employee.name as employee_name, fee_cents, mail, date 
+    FROM event 
+    JOIN ticket ON event.event_id = ticket.event_id
+    JOIN employee ON ticket.emp_id = employee.emp_id WHERE event.name LIKE ? and employee.name LIKE ? and date BETWEEN ? AND NOW(); 
   ";
 
   // Prepare the statement
@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Bind parameters
     $likeEmployeeName = "%$employeeName%";
     $likeEventName = "%$eventName%";
-    $stmt->bind_param('sss', $likeEmployeeName, $likeEventName, $startDate);
+    $stmt->bind_param('sss', $likeEventName, $likeEmployeeName, $startDate);
 
     // Execute the statement
     $stmt->execute();
@@ -38,7 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $_GET["index"] = $i;
       $_GET["name"] = $results[$i]["employee_name"];
       $_GET["event_name"] = $results[$i]["event_name"];
-      $_GET["fee"] = $results[$i]["fee"];
+      $_GET["mail"] = $results[$i]["mail"];
+      $_GET["fee"] = $results[$i]["fee_cents"];
       $_GET["date"] = $results[$i]["date"];
       include("filterRow.php");
     }

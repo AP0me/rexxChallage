@@ -56,5 +56,6 @@ foreach ($data as $item) {
 echo "Data imported successfully.";
 
 $conn->close();
-
+header('Location: upload.php');
+exit();
 

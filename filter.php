@@ -13,18 +13,23 @@
     }
     .filter-form {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
       background: #fff;
       padding: 20px;
       margin-bottom: 20px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      grid-template-columns: 1fr 1fr 1fr 1fr;
       gap: 15px;
     }
-    .filter-form div {
-      margin-bottom: 10px;
+    @media (max-width:560px) { 
+      .filter-form {
+        grid-template-columns: 1fr;
+        grid-template-rows: min-content min-content min-content min-content;
+        gap: unset;
+      }
     }
     .filter-form label {
       margin-right: 10px;
+      white-space: nowrap;
     }
     .filter-form input[type="text"],
     .filter-form input[type="date"] {
@@ -63,6 +68,7 @@
       border: 1px solid #ccc;
       border-radius: 4px;
       background: #f9f9f9;
+      white-space: nowrap;
     }
     .display-result .event-index {
       text-align: center;
@@ -81,7 +87,7 @@
       max-height: calc(100vh - 40px);
     }
     .break17{
-      height: 7px;
+      height: 17px;
     }
   </style>
 </head>

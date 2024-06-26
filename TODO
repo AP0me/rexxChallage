@@ -1,4 +1,4 @@
-Change the way events are checked for duplication from name to event_id (the event_id) in json not database.
+Make the event name in database unique
 
 Tests
 

@@ -90,6 +90,10 @@
       height: 17px;
     }
   </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+  <script defer="true" src="https://cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
+  <script defer="true" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+  <script defer="true" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 </head>
 <body>
   <?php include("navbar.php") ?>
@@ -103,9 +107,9 @@
         <label for="eventName">Event Name:</label>
         <input type="text" id="eventName" name="eventName" placeholder="Event">
       </div>
-      <div class="date">
-        <label for="eventDate">Since:</label>
-        <input type="date" id="eventDate" name="eventDate">
+      <div class="container">
+        <label for="dateRange">Stay duration</label>
+        <input type="text" id="dateRange" name="dateRange" class="max-w-xs" />
       </div>
       <div class="apply-filter">
         <div class="break17"></div>
@@ -116,16 +120,29 @@
   </div>
 
   <script defer="true">
+    $(function() {
+      $('#dateRange').daterangepicker({
+        startDate: '1970-01-01', // Set the earliest possible date
+        endDate: moment(), // Set the end date to today,
+        locale: {
+          format: 'YYYY-MM-DD' // Set the display format to YYYY-MM-DD
+        }
+      }, function(start, end, label) {
+        console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+      });
+    });
+  </script>
+  <script defer="true">
     function applyFilters() {
       let employeeName = document.querySelector('#employeeName').value;
       let eventName = document.querySelector('#eventName').value;
-      let eventDate = document.querySelector('#eventDate').value;
+      let eventDate = document.querySelector('#dateRange').value;
       let displayResult = document.querySelector('.display-result');
 
       let formData = new FormData();
       formData.append('employee_name', employeeName);
       formData.append('event_name', eventName);
-      formData.append('start_date', eventDate);
+      formData.append('date_range', eventDate);
 
       fetch('applyFilter.php', {
         method: 'POST',

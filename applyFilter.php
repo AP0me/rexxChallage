@@ -2,41 +2,52 @@
 include("db_connect.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  // Retrieve and sanitize POST data
   $employeeName = $_POST['employee_name'] ?? '';
   $eventName = $_POST['event_name'] ?? '';
-  $startDate = $_POST['start_date'] ?? '';
+  $dateRange = $_POST['date_range'] ?? '';
+  
+  // Split date range into start and end dates
+  $dates = explode(" - ", $dateRange);
+  $startDate = $dates[0] ?? '';
+  $endDate = $dates[1] ?? '';
 
+  $myfile = fopen("newfile.txt", "w");
+  fwrite($myfile, $startDate.$endDate);
+  
+  // Prepare SQL query
   $query = "
     SELECT event.name as event_name, employee.name as employee_name, fee_cents, mail, date 
     FROM event 
     JOIN ticket ON event.event_id = ticket.event_id
-    JOIN employee ON ticket.emp_id = employee.emp_id WHERE event.name LIKE ? and employee.name LIKE ? and date BETWEEN ? AND NOW(); 
+    JOIN employee ON ticket.emp_id = employee.emp_id 
+    WHERE event.name LIKE ? AND employee.name LIKE ? AND date BETWEEN ? AND ?;
   ";
 
+  // Execute the prepared statement
   if ($stmt = $conn->prepare($query)) {
     $likeEmployeeName = "%$employeeName%";
     $likeEventName = "%$eventName%";
-    $stmt->bind_param('sss', $likeEventName, $likeEmployeeName, $startDate);
+    $stmt->bind_param('ssss', $likeEventName, $likeEmployeeName, $startDate, $endDate);
     $stmt->execute();
     $result = $stmt->get_result();
     $results = $result->fetch_all(MYSQLI_ASSOC);
     $stmt->close();
-    
+
     include('column_names.php');
-    for ($i=0; $i < count($results); $i++) {
-      $_GET["index"] = $i;
-      $_GET["name"] = $results[$i]["employee_name"];
-      $_GET["event_name"] = $results[$i]["event_name"];
-      $_GET["mail"] = $results[$i]["mail"];
-      $_GET["fee"] = $results[$i]["fee_cents"];
-      $_GET["date"] = $results[$i]["date"];
+    // Loop through the results and include filterRow.php for each row
+    foreach ($results as $index => $row) {
+      $_GET["index"] = $index;
+      $_GET["name"] = $row["employee_name"];
+      $_GET["event_name"] = $row["event_name"];
+      $_GET["mail"] = $row["mail"];
+      $_GET["fee"] = $row["fee_cents"];
+      $_GET["date"] = $row["date"];
       include("filterRow.php");
     }
-    
-  }
-  else {
-    echo "Error preparing statement: " . $conn->error;
+  } else {
+    // Handle query preparation error
+    echo "Error preparing statement: " . htmlspecialchars($conn->error, ENT_QUOTES, 'UTF-8');
   }
 }
 $conn->close();
-

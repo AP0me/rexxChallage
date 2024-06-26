@@ -88,7 +88,7 @@
 
     .filter-segmenter{
       display: grid;
-      grid-template-rows: min-content calc(100vh - 212px);
+      grid-template-rows: min-content calc(100vh - 248px);
       max-height: calc(100vh - 40px);
     }
     @media (max-width:560px) { 

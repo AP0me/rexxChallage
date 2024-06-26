@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $dateRange = $_POST['date_range'] ?? '';
   
   // Split date range into start and end dates
-  $dates = explode(" - ", $dateRange);
+  $dates = explode(" to ", $dateRange);
   $startDate = $dates[0] ?? '';
   $endDate = $dates[1] ?? '';
   if(!validateDate($startDate, 'Y-m-d') || !validateDate($endDate, 'Y-m-d')){

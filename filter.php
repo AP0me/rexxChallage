@@ -100,10 +100,7 @@
       height: 17px;
     }
   </style>
-  <link rel="stylesheet" href="./libs/daterangepicker.css" />
-  <script defer="true" src="./libs/jquery.min.js"></script>
-  <script defer="true" src="./libs/moment.min.js"></script>
-  <script defer="true" src="./libs/daterangepicker.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
   <?php include("navbar.php") ?>
@@ -129,7 +126,25 @@
     <div class="display-result"></div>
   </div>
 
-  <script defer="true">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const dateRangePickerElement = document.getElementById('dateRange');
+      const earliestDate = new Date(0); // January 1, 1970
+      const todayDate = new Date(); // Today
+
+      flatpickr(dateRangePickerElement, {
+        mode: "range",
+        dateFormat: "Y-m-d",
+        defaultDate: [earliestDate, todayDate],
+        onChange: function(selectedDates, dateStr, instance) {
+          console.log("Selected dates: " + dateStr);
+        }
+      });
+
+      applyFilters();
+    });
+
     function applyFilters() {
       let employeeName = document.querySelector('#employeeName').value;
       let eventName = document.querySelector('#eventName').value;
@@ -147,36 +162,14 @@
       })
       .then(response => response.text())
       .then(titleAndData => {
-        if(displayResult.innerHTML.length!==titleAndData.length){
-          displayResult.innerHTML=titleAndData;
+        if(displayResult.innerHTML.length !== titleAndData.length){
+          displayResult.innerHTML = titleAndData;
         }
       })
       .catch(error => {
         console.error('Error:', error);
       });
     }
-  </script>
-    <script defer="true">
-    document.addEventListener('DOMContentLoaded', function() {
-      const dateRangePickerElement = document.getElementById('dateRange');
-      const formatDate = (date) => {
-        const year = date.getFullYear();
-        const month = ('0' + (date.getMonth() + 1)).slice(-2);
-        const day = ('0' + date.getDate()).slice(-2);
-        return `${year}-${month}-${day}`;
-      };
-
-      new daterangepicker(dateRangePickerElement, {
-        startDate: new Date('1970-01-01'),
-        endDate: new Date(),
-        locale: {
-          format: 'YYYY-MM-DD'
-        }
-      }, function(start, end, label) {
-        console.log("A new date selection was made: " + formatDate(start.toDate()) + ' to ' + formatDate(end.toDate()));
-      });
-      applyFilters();
-    });
   </script>
 </body>
 </html>

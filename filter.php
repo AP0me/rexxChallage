@@ -90,10 +90,10 @@
       height: 17px;
     }
   </style>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-  <script defer="true" src="https://cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
-  <script defer="true" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-  <script defer="true" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+  <link rel="stylesheet" href=".libs/daterangepicker.css" />
+  <script defer="true" src="./libs/jquery.min.js"></script>
+  <script defer="true" src="./libs/moment.min.js"></script>
+  <script defer="true" src="./libs/daterangepicker.min.js"></script>
 </head>
 <body>
   <?php include("navbar.php") ?>
@@ -120,19 +120,6 @@
   </div>
 
   <script defer="true">
-    $(function() {
-      $('#dateRange').daterangepicker({
-        startDate: '1970-01-01', // Set the earliest possible date
-        endDate: moment(), // Set the end date to today,
-        locale: {
-          format: 'YYYY-MM-DD' // Set the display format to YYYY-MM-DD
-        }
-      }, function(start, end, label) {
-        console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-      });
-    });
-  </script>
-  <script defer="true">
     function applyFilters() {
       let employeeName = document.querySelector('#employeeName').value;
       let eventName = document.querySelector('#eventName').value;
@@ -158,8 +145,28 @@
         console.error('Error:', error);
       });
     }
+  </script>
+    <script defer="true">
+    document.addEventListener('DOMContentLoaded', function() {
+      const dateRangePickerElement = document.getElementById('dateRange');
+      const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = ('0' + (date.getMonth() + 1)).slice(-2);
+        const day = ('0' + date.getDate()).slice(-2);
+        return `${year}-${month}-${day}`;
+      };
 
-    applyFilters();
+      new daterangepicker(dateRangePickerElement, {
+        startDate: new Date('1970-01-01'),
+        endDate: new Date(),
+        locale: {
+          format: 'YYYY-MM-DD' // Set the display format to YYYY-MM-DD
+        }
+      }, function(start, end, label) {
+        console.log("A new date selection was made: " + formatDate(start.toDate()) + ' to ' + formatDate(end.toDate()));
+      });
+      applyFilters();
+    });
   </script>
 </body>
 </html>

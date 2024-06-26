@@ -130,8 +130,8 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const dateRangePickerElement = document.getElementById('dateRange');
-      const earliestDate = new Date(0); // January 1, 1970
-      const todayDate = new Date(); // Today
+      const earliestDate = new Date(0);
+      const todayDate = new Date();
 
       flatpickr(dateRangePickerElement, {
         mode: "range",

@@ -1,9 +1,4 @@
-<div style="position: sticky; top: -20px; background-color: #fff; border: unset; width: 100%; height: 200%;" class="event-row"></div>
-<div style="position: sticky; top: -20px; background-color: #fff; border: unset; width: 100%; height: 200%;" class="event-row"></div>
-<div style="position: sticky; top: -20px; background-color: #fff; border: unset; width: 100%; height: 200%;" class="event-row"></div>
-<div style="position: sticky; top: -20px; background-color: #fff; border: unset; width: 100%; height: 200%;" class="event-row"></div>
-<div style="position: sticky; top: -20px; background-color: #fff; border: unset; width: 100%; height: 200%;" class="event-row"></div>
-<div style="position: sticky; top: -20px; background-color: #fff; border: unset; width: 100%; height: 200%;" class="event-row"></div>
+<?php for ($i = 0; $i < 6; $i++) { echo '<div style="position: sticky; top: -20px; background-color: #fff; border: unset; width: 100%; height: 200%;" class="event-row"></div>'; } ?>
 <div style="position: sticky; top: 0;" class="event-row event-index">Index</div>
 <div style="position: sticky; top: 0;" class="event-row event-emp-name">Employee</div>
 <div style="position: sticky; top: 0;" class="event-row event-name">Event</div>

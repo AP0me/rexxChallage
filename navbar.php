@@ -22,5 +22,5 @@
 
 <div class="navbar">
   <a href="filter.php">Filter Data</a>
-  <a href="import_json.php">Add Data</a>
+  <a href="upload.php">Add Data</a>
 </div>

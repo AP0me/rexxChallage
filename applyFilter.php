@@ -1,6 +1,11 @@
 <?php
 include("db_connect.php");
 
+function validateDate($date, $format = 'Y-m-d') {
+  $d = DateTime::createFromFormat($format, $date);
+  return $d && $d->format($format) === $date;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // Retrieve and sanitize POST data
   $employeeName = $_POST['employee_name'] ?? '';
@@ -11,9 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $dates = explode(" - ", $dateRange);
   $startDate = $dates[0] ?? '';
   $endDate = $dates[1] ?? '';
-
-  $myfile = fopen("newfile.txt", "w");
-  fwrite($myfile, $startDate.$endDate);
+  if(!validateDate($startDate, 'Y-m-d') || !validateDate($endDate, 'Y-m-d')){
+    $startDate = ''; $endDate = '';
+  }
   
   // Prepare SQL query
   $query = "

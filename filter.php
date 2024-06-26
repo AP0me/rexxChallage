@@ -160,7 +160,7 @@
         startDate: new Date('1970-01-01'),
         endDate: new Date(),
         locale: {
-          format: 'YYYY-MM-DD' // Set the display format to YYYY-MM-DD
+          format: 'YYYY-MM-DD'
         }
       }, function(start, end, label) {
         console.log("A new date selection was made: " + formatDate(start.toDate()) + ' to ' + formatDate(end.toDate()));

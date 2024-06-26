@@ -3,5 +3,3 @@ Change the way events are checked for duplication from name to event_id (the eve
 Tests
 
 Transactions???
-
-Fix Date filter

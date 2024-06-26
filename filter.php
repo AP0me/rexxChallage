@@ -56,6 +56,7 @@
     .display-result {
       display: grid;
       max-height: 100%;
+      height: fit-content;
       overflow-y: auto;
       grid-template-columns: 80px auto auto auto auto min-content;
       gap: 10px;
@@ -92,7 +93,7 @@
     }
     @media (max-width:560px) { 
       .filter-segmenter{
-        grid-template-rows: min-content calc(100vh - 360px);
+        grid-template-rows: min-content calc(100vh - 402px);
       }
     }
     .break17{

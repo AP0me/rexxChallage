@@ -1,4 +1,5 @@
-Change the way events are checked for duplication from name to event_id (the event)id in json not database.
+Change the way events are checked for duplication from name to event_id (the event_id) in json not database.
 
-Check if event-employee combination is already on db before adding them to ticket.
+Tests
 
+Transactions???

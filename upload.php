@@ -44,10 +44,10 @@
 <body>
   <?php include("navbar.php") ?>
   <h1>Upload JSON File</h1>
-  <form action="import_json.php" method="POST" enctype="multipart/form-data">
-    <label for="file">Choose JSON file:</label>
-    <input type="file" name="file" id="file" accept=".json" required>
-    <button type="submit">Upload</button>
+  <form action="import_json.php" method="post" enctype="multipart/form-data">
+    <label for="jsonDataFile">Choose JSON file to upload:</label>
+    <input type="file" name="jsonDataFile" id="file" accept=".json" required>
+    <input type="submit" value="Upload">
   </form>
 </body>
 </html>

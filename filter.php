@@ -90,7 +90,7 @@
       height: 17px;
     }
   </style>
-  <link rel="stylesheet" href=".libs/daterangepicker.css" />
+  <link rel="stylesheet" href="./libs/daterangepicker.css" />
   <script defer="true" src="./libs/jquery.min.js"></script>
   <script defer="true" src="./libs/moment.min.js"></script>
   <script defer="true" src="./libs/daterangepicker.min.js"></script>

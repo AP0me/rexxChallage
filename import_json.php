@@ -7,7 +7,7 @@ function zeroCopies($checkforCopyStmt){
   $checkforCopyStmt->bind_result($copy_count);
   $checkforCopyStmt->fetch();
   $checkforCopyStmt->close();
-  return $copy_count==0;
+  return $copy_count == 0;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -20,40 +20,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $jsonData = file_get_contents($_FILES['jsonDataFile']['tmp_name']);
       $data = json_decode($jsonData, true);
 
-      // Inserts
-      $insertEvent = $conn->prepare("INSERT INTO `event` (`name`, `fee_cents`, `date`) VALUES (?, ?, ?)");
-      $insertEmployee = $conn->prepare("INSERT INTO employee (`name`, `mail`) VALUES (?, ?)");
-      $insertTicket = $conn->prepare("INSERT INTO ticket (emp_id, event_id) VALUES ((SELECT emp_id FROM employee WHERE `mail`=?), (SELECT event_id FROM `event` WHERE `name`=?));");
+      $conn->begin_transaction();
+      try {
+        $insertEvent = $conn->prepare("INSERT INTO `event` (`name`, `fee_cents`, `date`) VALUES (?, ?, ?)");
+        $insertEmployee = $conn->prepare("INSERT INTO employee (`name`, `mail`) VALUES (?, ?)");
+        $insertTicket = $conn->prepare("INSERT INTO ticket (emp_id, event_id) VALUES ((SELECT emp_id FROM employee WHERE `mail`=?), (SELECT event_id FROM `event` WHERE `name`=?));");
 
-      foreach ($data as $item) {
-        $participationFeeCents = (int)($item['participation_fee'] * 100);
-        $eventDate = isset($item['event_date']) ? $item['event_date'] : NULL;
+        foreach ($data as $item) {
+          $participationFeeCents = (int)($item['participation_fee'] * 100);
+          $eventDate = isset($item['event_date']) ? $item['event_date'] : NULL;
 
-        $eventStmt = $conn->prepare("SELECT count(event_id) FROM `event` WHERE `name` = ?");
-        $eventStmt->bind_param("s", $item['event_name']);
-        if (zeroCopies($eventStmt)) {
-          $insertEvent->bind_param("sis", $item['event_name'], $participationFeeCents, $eventDate);
-          $insertEvent->execute();
+          $eventStmt = $conn->prepare("SELECT count(event_id) FROM `event` WHERE `name` = ?");
+          $eventStmt->bind_param("s", $item['event_name']);
+          if (zeroCopies($eventStmt)) {
+            $insertEvent->bind_param("sis", $item['event_name'], $participationFeeCents, $eventDate);
+            $insertEvent->execute();
+          }
+
+          $employeeStmt = $conn->prepare("SELECT count(emp_id) FROM employee WHERE mail = ?");
+          $employeeStmt->bind_param("s", $item['employee_mail']);
+          if (zeroCopies($employeeStmt)) {
+            $insertEmployee->bind_param("ss", $item['employee_name'], $item['employee_mail']);
+            $insertEmployee->execute();
+          }
+
+          $ticketStmt = $conn->prepare("SELECT count(ticket_id) FROM ticket WHERE emp_id = (SELECT emp_id FROM employee WHERE `mail`=?) AND event_id = (SELECT event_id FROM `event` WHERE `name`=?)");
+          $ticketStmt->bind_param("ss", $item['employee_mail'], $item['event_name']);        
+          if (zeroCopies($ticketStmt)) {
+            $insertTicket->bind_param("ss", $item['employee_mail'], $item['event_name']);
+            $insertTicket->execute();
+          }
         }
 
-        $employeeStmt = $conn->prepare("SELECT count(emp_id) FROM employee WHERE mail = ?");
-        $employeeStmt->bind_param("s", $item['employee_mail']);
-        if (zeroCopies($employeeStmt)) {
-          $insertEmployee->bind_param("ss", $item['employee_name'], $item['employee_mail']);
-          $insertEmployee->execute();
-        }
-
-        $ticketStmt = $conn->prepare("SELECT count(ticket_id) FROM ticket WHERE emp_id = (SELECT emp_id FROM employee WHERE `mail`=?) AND event_id = (SELECT event_id FROM `event` WHERE `name`=?)");
-        $ticketStmt->bind_param("ss", $item['employee_mail'], $item['event_name']);        
-        if (zeroCopies($ticketStmt)) {
-          $insertTicket->bind_param("ss", $item['employee_mail'], $item['event_name']);
-          $insertTicket->execute();
-        }
+        $conn->commit();
+        echo "Data imported successfully.";
+        $conn->close();
+        header('Location: upload.php?upload=success');
+        exit();
+      } catch (Exception $e) {
+        $conn->rollback();
+        echo "Error importing data: " . $e->getMessage();
+        $conn->close();
+        header('Location: upload.php?upload=error');
+        exit();
       }
-      echo "Data imported successfully.";
-      $conn->close();
-      header('Location: upload.php?upload=success');
-      exit();
     }
     else {
       echo "Upload failed. Allowed file types: .json";
@@ -69,5 +79,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
   }
 }
-
-

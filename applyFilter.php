@@ -2,7 +2,6 @@
 include("db_connect.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // Retrieve the query parameters from the request
   $employeeName = $_POST['employee_name'] ?? '';
   $eventName = $_POST['event_name'] ?? '';
   $startDate = $_POST['start_date'] ?? '';
@@ -14,26 +13,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     JOIN employee ON ticket.emp_id = employee.emp_id WHERE event.name LIKE ? and employee.name LIKE ? and date BETWEEN ? AND NOW(); 
   ";
 
-  // Prepare the statement
   if ($stmt = $conn->prepare($query)) {
-    // Bind parameters
     $likeEmployeeName = "%$employeeName%";
     $likeEventName = "%$eventName%";
     $stmt->bind_param('sss', $likeEventName, $likeEmployeeName, $startDate);
-
-    // Execute the statement
     $stmt->execute();
-
-    // Get the result
     $result = $stmt->get_result();
-
-    // Fetch all results
     $results = $result->fetch_all(MYSQLI_ASSOC);
-
-    // Close statement
     $stmt->close();
     
-    
+    include('column_names.php');
     for ($i=0; $i < count($results); $i++) {
       $_GET["index"] = $i;
       $_GET["name"] = $results[$i]["employee_name"];
@@ -44,11 +33,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       include("filterRow.php");
     }
     
-  } else {
+  }
+  else {
     echo "Error preparing statement: " . $conn->error;
   }
 }
-
-// Close connection
 $conn->close();
 

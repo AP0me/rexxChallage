@@ -1,0 +1,14 @@
+// Example function to test
+function add($a, $b) {
+  return $a + $b;
+}
+
+// Creating test cases
+$test = new MyTest();
+
+// Test cases for add function
+$test->assertEquals(3, add(1, 2), "Adding 1 and 2 should be 3");
+$test->assertEquals(5, add(2, 3), "Adding 2 and 3 should be 5");
+$test->assertEquals(0, add(0, 0), "Adding 0 and 0 should be 0");
+$test->assertEquals(-1, add(-1, 0), "Adding -1 and 0 should be -1");
+

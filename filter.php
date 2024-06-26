@@ -92,8 +92,8 @@
   </style>
 </head>
 <body>
+  <?php include("navbar.php") ?>
   <div class="filter-segmenter">
-    <?php include("navbar.php") ?>
     <div class="filter-form">
       <div class="employee-name">
         <label for="employeeName">Employee Name:</label>
@@ -132,14 +132,7 @@
         body: formData
       })
       .then(response => response.text())
-      .then(data => {
-        let titleAndData = `
-        <div class="event-row event-index">Index</div>
-        <div class="event-row event-emp-name">Employee</div>
-        <div class="event-row event-name">Event</div>
-        <div class="event-row event-fee">Fee</div>
-        <div class="event-row event-mail">Mail</div>
-        <div class="event-row event-date">Date</div>` + data;
+      .then(titleAndData => {
         if(displayResult.innerHTML.length!==titleAndData.length){
           displayResult.innerHTML=titleAndData;
         }

@@ -154,28 +154,21 @@
         console.error('Error:', error);
       });
     }
+    applyFilters();
   </script>
-    <script defer="true">
-    document.addEventListener('DOMContentLoaded', function() {
-      const dateRangePickerElement = document.getElementById('dateRange');
-      const formatDate = (date) => {
-        const year = date.getFullYear();
-        const month = ('0' + (date.getMonth() + 1)).slice(-2);
-        const day = ('0' + date.getDate()).slice(-2);
-        return `${year}-${month}-${day}`;
-      };
-
-      new daterangepicker(dateRangePickerElement, {
-        startDate: new Date('1970-01-01'),
-        endDate: new Date(),
+  <script defer="true">
+    $(function() {
+      $('#dateRange').daterangepicker({
+        startDate: '01/01/1970', // Earliest possible date as a string
+        endDate: moment(), // Set the end date to today using moment.js
         locale: {
-          format: 'YYYY-MM-DD'
+          format: 'YYYY-MM-DD' // Set the display format to YYYY-MM-DD
         }
       }, function(start, end, label) {
-        console.log("A new date selection was made: " + formatDate(start.toDate()) + ' to ' + formatDate(end.toDate()));
+        console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD')); // Format dates using moment.js
       });
-      applyFilters();
     });
+
   </script>
 </body>
 </html>

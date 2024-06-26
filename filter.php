@@ -55,7 +55,7 @@
     }
     .display-result {
       display: grid;
-      max-height: calc(100vh - 260px);
+      max-height: 100%;
       overflow-y: auto;
       grid-template-columns: 80px auto auto auto auto min-content;
       gap: 10px;
@@ -81,10 +81,19 @@
       padding-left: 10px;
     }
 
+    .title-row{
+      grid-column: 1 / span 4;
+    }
+
     .filter-segmenter{
       display: grid;
-      grid-template-rows: min-content min-content auto;
+      grid-template-rows: min-content calc(100vh - 212px);
       max-height: calc(100vh - 40px);
+    }
+    @media (max-width:560px) { 
+      .filter-segmenter{
+        grid-template-rows: min-content calc(100vh - 360px);
+      }
     }
     .break17{
       height: 17px;
@@ -145,21 +154,28 @@
         console.error('Error:', error);
       });
     }
-    applyFilters();
   </script>
-  <script defer="true">
-    $(function() {
-      $('#dateRange').daterangepicker({
-        startDate: '01/01/1970', // Earliest possible date as a string
-        endDate: moment(), // Set the end date to today using moment.js
+    <script defer="true">
+    document.addEventListener('DOMContentLoaded', function() {
+      const dateRangePickerElement = document.getElementById('dateRange');
+      const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = ('0' + (date.getMonth() + 1)).slice(-2);
+        const day = ('0' + date.getDate()).slice(-2);
+        return `${year}-${month}-${day}`;
+      };
+
+      new daterangepicker(dateRangePickerElement, {
+        startDate: new Date('1970-01-01'),
+        endDate: new Date(),
         locale: {
-          format: 'YYYY-MM-DD' // Set the display format to YYYY-MM-DD
+          format: 'YYYY-MM-DD'
         }
       }, function(start, end, label) {
-        console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD')); // Format dates using moment.js
+        console.log("A new date selection was made: " + formatDate(start.toDate()) + ' to ' + formatDate(end.toDate()));
       });
+      applyFilters();
     });
-
   </script>
 </body>
 </html>
